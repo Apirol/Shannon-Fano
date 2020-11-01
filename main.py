@@ -1,34 +1,20 @@
-from InputHandler import openFileAndReadData, openFileAndReadNumber
+from InputHandler import openFileAndReadData, openFileAndReadNumber, makeFrequrencyAlphabet
 from OutputHandler import writeDataToFile, Report
 from collections import Counter
-import numpy as np
-from ShannonFano import shenon_get_codes, getAllInfo, decode_symbol
+from Info import getAllInfo
+from ShannonFano import shenon_get_codes, decode_text, encryptText
 
 if __name__ == '__main__':
         alphabet = openFileAndReadData("Data/Alphabet.txt")
         frequrency = list(openFileAndReadNumber("Data/FrequencyP2.txt"))
-
-        alphabetWithFreq = dict()
-        for i in range(len(frequrency)):
-                alphabetWithFreq.update({alphabet[i]: frequrency[i]})
-        countForEachSymbol = Counter(alphabet)
-
+        textToEncrypt = openFileAndReadData("Data/Text.txt")
+        alphabetWithFreq = makeFrequrencyAlphabet(alphabet, frequrency)
 
         code_table = shenon_get_codes(alphabetWithFreq)
-        writeDataToFile(code_table, "Data/encryptText.txt")
+        encryptedText = encryptText(code_table, textToEncrypt)
+        writeDataToFile(encryptedText, "Data/encryptedText.txt")
         info = getAllInfo(code_table, alphabetWithFreq)
         Report("Data/Report.txt", info)
 
-        encoded = [code_table[letter] for letter in alphabet]
-        encoded_bits = ''.join(encoded)
-        encoded_str = [chr(int(encoded_bits[i:i + 8], 2)) for i in range(0, len(encoded_bits), 8)]
-
-        index = 0
-        decoded_str = ''
-
-        while index < len(encoded_bits):
-            current = decode_symbol(alphabetWithFreq, encoded_bits, index)
-            decoded_str += current
-            index += len(code_table[current])
-
-        writeDataToFile("Data/encryptText", decoded_str)
+        decoded_text = decode_text(encryptedText, alphabetWithFreq, code_table)
+        writeDataToFile(decoded_text, "Data/decryptedText.txt")

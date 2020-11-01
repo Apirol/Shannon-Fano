@@ -1,5 +1,3 @@
-from math import log, pow
-
 def shenon_get_codes(table, value='', codes={}):
     if len(table) != 1:
         a, b = next_vertex(table)
@@ -8,6 +6,7 @@ def shenon_get_codes(table, value='', codes={}):
     else:
         codes[table.popitem()[0]] = value
     return codes
+
 
 def next_vertex(table):
     optimal_difference = sum(table.values())
@@ -23,40 +22,18 @@ def next_vertex(table):
            dict({item for i, item in enumerate(table.items()) if i >= optimal_index})
 
 
-def getAllInfo(code_table, alphabetWithFreq):
-    averageLenght = code_symbol_lenght(code_table)
-    entropyH = sum(calculateEntropyH(alphabetWithFreq))
-    superfluity = calculateSuperfluity(entropyH)
-    check = checkCraft(code_table)
-    return list([averageLenght, entropyH, superfluity, check])
+def decode_text(text, alphabetWithFreq, code_table):
+    encoded_str = ''.join(text)
 
-def code_symbol_lenght(code_table):
-    sumList = list()
-    for key in code_table:
-        sumList.append(len(code_table[key]))
-    return sum(sumList) / len(sumList)
+    index = 0
+    decoded_str = ''
 
-def calculateEntropyH(alphabetWithFreq):
-    entropyH = list()
+    while index < len(encoded_str):
+        current = decode_symbol(alphabetWithFreq, encoded_str, index)
+        decoded_str += current
+        index += len(code_table[current])
 
-    for key in alphabetWithFreq:
-        probability = alphabetWithFreq[key]
-        entropyH.append(probability * log(1 / probability, 2))
-    return entropyH
-
-def calculateSuperfluity(entropyH):
-    entropyH1 = log(4, 2)
-    return 1 - (entropyH / entropyH1)
-
-def checkCraft(code_table):
-    checkList = list()
-    for key in code_table:
-        checkList.append(pow(2, -len(code_table[key])))
-    try:
-        if (sum(checkList) <= 1):
-            return "true"
-    except:
-        Exception("Does not satisfy Kraft's inequality")
+    return decoded_str
 
 
 def decode_symbol(table, code, index=0):
@@ -69,8 +46,12 @@ def decode_symbol(table, code, index=0):
     else:
         return table.popitem()[0]
 
-def generateSequence(code_table):
-    sequence = list()
 
-    for i in range(0, 1000):
-        sequence.append()
+def encryptText(code_table, text):
+    encryptedText = list()
+    size = len(text)
+
+    for i in range(0, size):
+        encryptedText.append(code_table[text[i]])
+
+    return encryptedText
