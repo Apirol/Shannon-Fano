@@ -1,12 +1,13 @@
 from math import log, pow
 
 
-def getAllInfo(code_table, alphabetWithFreq):
+def getAllInfo(code_table, alphabetWithFreq, text):
     averageLenght = code_symbol_lenght(code_table)
     entropyH = sum(calculateEntropyH(alphabetWithFreq))
     superfluity = calculateSuperfluity(entropyH)
     check = checkCraft(code_table)
-    return list([averageLenght, entropyH, superfluity, check])
+    lenghtOfText = len(text)
+    return list([averageLenght, entropyH, superfluity, check, lenghtOfText, code_table])
 
 
 def code_symbol_lenght(code_table):
@@ -34,8 +35,5 @@ def checkCraft(code_table):
     checkList = list()
     for key in code_table:
         checkList.append(pow(2, -len(code_table[key])))
-    try:
-        if (sum(checkList) <= 1):
-            return "true"
-    except:
-        Exception("Does not satisfy Kraft's inequality")
+
+    return sum(checkList)
