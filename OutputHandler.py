@@ -5,9 +5,9 @@ def Report(filename, info):
 
     handle = open(filename, 'w', encoding='utf-8')
 
-
     for i in range(0, size):
         handle.write(format[i] + str(info[i]) + "\n")
+
 
 def writeDataToFile(text, fileName):
     handle = open(fileName, 'w', encoding='utf-8')

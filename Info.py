@@ -6,6 +6,7 @@ def getAllInfo(code_table, alphabetWithFreq, text):
     entropyH = sum(calculateEntropyH(alphabetWithFreq))
     superfluity = calculateSuperfluity(entropyH)
     check = checkCraft(code_table)
+    text = "".join(text)
     lenghtOfText = len(text)
     return list([averageLenght, entropyH, superfluity, check, lenghtOfText, code_table])
 
